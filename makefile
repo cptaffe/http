@@ -2,12 +2,14 @@ SRC = http.c
 HDR = http.h
 
 OBJ := $(SRC:.c=.o)
-LIB = libsock.o
+LIB = libhttp.o
 
 LIBS=
 CFLAGS+=-g  $(addprefix -I, $(dir $(LIBS)))
 
-.PHONY: all clean
+TESTBIN=test.bin
+
+.PHONY: all clean test
 
 all: $(LIB)
 
@@ -19,6 +21,15 @@ $(LIBS):
 
 $(LIB): $(OBJ) $(LIBS)
 	$(LD) -o $@ -r $^
+
+$(TESTBIN): test.o $(LIB)
+	$(CC) -o $(TESTBIN) test.c $(LIB)
+
+# run tests
+test: $(LIB)
+	$(CC) $(CFLAGS) --std=c99 -o "test.o" -c "test.c"
+	$(CC) $(CFLAGS) -o "test" "test.o" $^
+	./test
 
 clean:
 	$(RM) $(LIB) $(OBJ)
