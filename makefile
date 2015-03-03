@@ -5,7 +5,7 @@ OBJ := $(SRC:.cc=.o)
 LIB = libhttp.o
 
 LIBS=
-CFLAGS+=-g $(addprefix -I, $(dir $(LIBS)))
+CXXFLAGS+=-g $(addprefix -I, $(dir $(LIBS)))
 
 TESTBIN=test.bin
 
@@ -14,7 +14,7 @@ TESTBIN=test.bin
 all: $(LIB)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $?
+	$(CXX) $(CXXFLAGS) -o $@ -c $?
 
 $(LIBS):
 	$(foreach var,$@, $(MAKE) $(MAKEFLAGS) -C $(dir $(var));)
@@ -23,12 +23,12 @@ $(LIB): $(OBJ) $(LIBS)
 	$(LD) -o $@ -r $^
 
 $(TESTBIN): test.o $(LIB)
-	$(CC) -o $(TESTBIN) test.cc $(LIB)
+	$(CXX) -o $(TESTBIN) test.cc $(LIB)
 
 # run tests
 test: $(LIB)
-	$(CC) $(CFLAGS) --std=c99 -o "test.o" -c "test.cc"
-	$(CC) $(CFLAGS) -o "test" "test.o" $^
+	$(CXX) $(CXXFLAGS) -o "test.o" -c "test.cc"
+	$(CXX) $(CXXFLAGS) -o "test" "test.o" $^
 	./test
 
 clean:
